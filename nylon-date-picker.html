@@ -2,6 +2,15 @@
 <link rel="import" href="../polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../paper-menu-button/paper-menu-button.html">
 
+<link rel="import" href="./bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="./bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="./bower_components/iron-dropdown/iron-dropdown.html">
+
+
+<link rel="import" href="./bower_components/neon-animation/neon-animations.html">
+
 <dom-module id="nylon-date-picker">
   <template>
     <style>
@@ -14,13 +23,14 @@
       }
 
       .calendar_modern {
-        padding: 50px;
+        /* padding: 50px; */
       }
 
       .calendar_modern .calendar {
         margin: auto;
-        width: 240px;
-        height: 290px;
+        width: 245px;
+        /* height: auto; */
+        height: 260px;
       }
 
       .calendar_modern .calendar .nav {
@@ -90,7 +100,7 @@
         float: left;
         width: 33px;
         height: 33px;
-
+        background-color: #ffffff;
         font-size: 1.5em;
         font-weight: bold;
         line-height: 34px;
@@ -127,39 +137,48 @@
         color: #000;
       }
 
-      span ,.n {
+      span,
+      .n {
         cursor: pointer
       }
-    </style>
-    [[selected]]<br> [[selectedBe]]
-    <div id="calendar" class="calendar_modern">
-      <div class="calendar">
+    </style>[[selected]]
+    <br> [[selectedBe]]
 
+    <paper-input label="Input label" value={{selectedBe}} disabled="[[disabled]]">
+      <paper-icon-button slot="suffix" icon="clear" on-tap="openCalendar"></paper-icon-button>
+    </paper-input>
 
+    <iron-dropdown id="dropdown" horizontal-align="right" vertical-align="top" open-animation-config="[[openAnimationConfig]]"
+      close-animation-config="[[closeAnimationConfig]]">
+      <div slot="dropdown-content" class="box">
+        <div id="calendar" class="calendar_modern">
+          <div class="calendar">
+            <div class="months">
+              <div class="month" data-date="2011.1">
+                <div class="header"><span class="n" on-click="previousYear">&#60&#60</span>&nbsp;&nbsp;<span class="n" on-click="previousMonth">&#60</span>&nbsp;&nbsp;&nbsp;&nbsp;[[monthAndYear]]&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span class="n" on-click="nextMonth">&#62</span>&nbsp;&nbsp;<span on-click="nextYear" class="n">&#62&#62</span></div>
+                <div class="body">
 
-        <div class="months">
-          <div class="month" data-date="2011.1">
-            <div class="header"><span class="n" on-click="previousYear">&#60&#60</span>&nbsp;&nbsp;<span class="n" on-click="previousMonth">&#60</span>&nbsp;&nbsp;&nbsp;&nbsp;[[monthAndYear]]&nbsp;&nbsp;&nbsp;&nbsp;<span class="n" on-click="nextMonth">&#62</span>&nbsp;&nbsp;<span on-click="nextYear" class="n">&#62&#62</span></div>
-            <div class="body">
-
-              <div class="day_names">
-                <template is="dom-repeat" items="[[daysOfWeek]]">
-                  <i>[[item]]</i>
-                </template>
-              </div>
-              <div class="days">
-                <template is="dom-repeat" items="[[items]]">
-                  <template is="dom-repeat" as="item2" items="[[item]]">
-                    <s on-click="_selectDate" i-left$="[[_checkLeft(index)]]" i-select$="[[_checkType(item2.type,'select')]]" i-frist$="[[_checkType(item2.type,'frist')]]"
-                      i-current$="[[_checkType(item2.type,'current')]]" i-last$="[[_checkType(item2.type,'last')]]">[[item2.day]]</s>
-                  </template>
-                </template>
+                  <div class="day_names">
+                    <template is="dom-repeat" items="[[daysOfWeek]]">
+                      <i>[[item]]</i>
+                    </template>
+                  </div>
+                  <div class="days">
+                    <template is="dom-repeat" items="[[items]]">
+                      <template is="dom-repeat" as="item2" items="[[item]]">
+                        <s on-click="_selectDate" i-left$="[[_checkLeft(index)]]" i-select$="[[_checkType(item2.type,'select')]]" i-frist$="[[_checkType(item2.type,'frist')]]"
+                          i-current$="[[_checkType(item2.type,'current')]]" i-last$="[[_checkType(item2.type,'last')]]">[[item2.day]]</s>
+                      </template>
+                    </template>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </iron-dropdown>
   </template>
 
   <script>
@@ -179,7 +198,7 @@
             type: String,
             observer: '_selectedChanged',
             notify: true,
-            value:'2017-9-15'
+            value: '2017-9-15'
             // 2017-1-15
           },
           selectedBe: {
@@ -187,6 +206,39 @@
             observer: '_selectedBeChanged',
             notify: true,
             //value:'15/9/2560'
+          },
+          disabled: {
+            type: Boolean,
+            value: false
+          },
+          openAnimationConfig: {
+            type: Array,
+            value: function () {
+              return [{
+                name: 'fade-in-animation',
+                timing: {
+                  delay: 150,
+                  duration: 50
+                }
+              }, {
+                name: 'expand-animation',
+                timing: {
+                  delay: 150,
+                  duration: 200
+                }
+              }];
+            }
+          },
+          closeAnimationConfig: {
+            type: Array,
+            value: function () {
+              return [{
+                name: 'fade-out-animation',
+                timing: {
+                  duration: 200
+                }
+              }];
+            }
           }
         };
       }
@@ -202,7 +254,7 @@
       init() {
         this.daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
         this.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        
+
         //xxx
         this.format = 'dd/mm/yyyy'
 
@@ -339,6 +391,7 @@
 
       _selectDate(e) {
         this.selected = e.model.item2.date
+        this.$.dropdown.close();
       }
 
       _selectedChanged(selected) {
@@ -366,6 +419,10 @@
           year: parseInt(select[2] - 543)
         }
         this.selected = (`${selectData.year}-${selectData.month + 1}-${selectData.day}`)
+      }
+
+      openCalendar() {
+        this.$.dropdown.open();
       }
     }
 
