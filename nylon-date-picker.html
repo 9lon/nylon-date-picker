@@ -145,7 +145,7 @@
     <br> [[selectedBe]]
 
     <paper-input label="Input label" value={{selectedBe}} disabled="[[disabled]]">
-      <paper-icon-button slot="suffix" icon="clear" on-tap="openCalendar"></paper-icon-button>
+      <paper-icon-button slot="suffix" icon="arrow-drop-down" on-tap="openCalendar"></paper-icon-button>
     </paper-input>
 
     <iron-dropdown id="dropdown" horizontal-align="right" vertical-align="top" open-animation-config="[[openAnimationConfig]]"
@@ -393,7 +393,12 @@
         this.selected = e.model.item2.date
         this.$.dropdown.close();
       }
-
+      _firstDayOfMonth() {
+        new Date(Number(this.data.year) - 543, Number(this.data.month - 1), 1)
+      }
+      _lastDayOfMonth() {
+        new Date(Number(this.data.year) - 543, Number(this.data.month - 1) + 1, 0)
+      }
       _selectedChanged(selected) {
         var select = selected.split('-')
 
@@ -412,13 +417,19 @@
 
       _selectedBeChanged(selectedBe) {
         var select = selectedBe.split('/')
-
-        var selectData = {
-          day: parseInt(select[0]),
-          month: parseInt(select[1]) - 1,
-          year: parseInt(select[2] - 543)
+        // console.log(select[2].length)
+        if (select[1] > 12) {
+          this.selectedBe = `${select[0]}/12/${select[2]}`
         }
-        this.selected = (`${selectData.year}-${selectData.month + 1}-${selectData.day}`)
+        if (select[2].length >= 4 && select[2] < 99999) {
+          var selectData = {
+            day: parseInt(select[0]),
+            month: parseInt(select[1]) - 1,
+            year: parseInt(select[2] - 543)
+          }
+          this.selected = (`${selectData.year}-${selectData.month + 1}-${selectData.day}`)
+        }
+
       }
 
       openCalendar() {
