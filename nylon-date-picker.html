@@ -11,6 +11,8 @@
 
 <link rel="import" href="./bower_components/neon-animation/neon-animations.html">
 
+<link rel="import" href="./nylon-date-icon.html">
+
 <dom-module id="nylon-date-picker">
   <template>
     <style>
@@ -141,11 +143,25 @@
       .n {
         cursor: pointer
       }
+
+      paper-icon-button {
+        color: #8d8d8d;
+        -o-transition: color .2s ease-out;
+        -ms-transition: color .2s ease-out;
+        -moz-transition: color .2s ease-out;
+        -webkit-transition: color .2s ease-out;
+        /* ...and now override with proper CSS property */
+        transition: color .2s ease-out;
+      }
+
+      paper-icon-button:hover {
+        color: black;
+      }
     </style>[[selected]]
     <br> [[selectedBe]]
 
-    <paper-input label="Input label" value={{selectedBe}} disabled="[[disabled]]">
-      <paper-icon-button slot="suffix" icon="arrow-drop-down" on-tap="openCalendar"></paper-icon-button>
+    <paper-input label="{{label}}" value={{selectedBe}} disabled="[[disabled]]">
+      <paper-icon-button slot="suffix" icon="nylon-data-icon:calendar" on-tap="openCalendar"></paper-icon-button>
     </paper-input>
 
     <iron-dropdown id="dropdown" horizontal-align="right" vertical-align="top" open-animation-config="[[openAnimationConfig]]"
@@ -198,7 +214,7 @@
             type: String,
             observer: '_selectedChanged',
             notify: true,
-            value: '2017-9-15'
+            value: '2017-9-15',
             // value: new Date().toISOString()
             // 2017-1-15
           },
@@ -208,9 +224,21 @@
             notify: true,
             //value:'15/9/2560'
           },
+          label: {
+            type: String,
+            value: 'Label'
+          },
           disabled: {
             type: Boolean,
             value: false
+          },
+          daysOfWeek: {
+            type: Array,
+            value: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          },
+          months: {
+            type: Array,
+            value: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
           },
           openAnimationConfig: {
             type: Array,
@@ -253,8 +281,8 @@
 
 
       init() {
-        this.daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        this.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        // this.daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        // this.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
         //xxx
         this.format = 'dd/mm/yyyy'
@@ -434,26 +462,32 @@
           }
         }
       }
-      _checkDatePass(select){
+      _checkDatePass(select) {
         // console.log(select[2],select[1]);
         return select[2].length >= 4 && select[2] < 9999 &&
           select[1].length >= 1 && select[1] < 13 &&
           select[0].length >= 1 && select[0] < this._getlastDateOfCurrentMonth(select[2], select[1] - 1)
       }
       _selectedChanged(selected) {
-        var select = selected.split('-')
-        // this._checkDate(select,'dc')
-        this.selectData = {
-          day: parseInt(select[2]),
-          month: parseInt(select[1]) - 1,
-          year: parseInt(select[0])
+        //เช็คว่าค่าว่างมาไหม
+        if (selected !== '' && selected !== undefined) {
+          var select = selected.split('-')
+          // this._checkDate(select,'dc')
+          // if (this._checkDatePass(select)) {
+          this.selectData = {
+            day: parseInt(select[2]),
+            month: parseInt(select[1]) - 1,
+            year: parseInt(select[0])
+          }
+          this.selectedBe = `${this.selectData.day}/${this.selectData.month + 1}/${this.selectData.year + 543}`
+          this.currentYear = this.selectData.year
+          this.currentMonth = this.selectData.month
+          this.renderCalendar()
+        } else {
+          this.set('selected', new Date().toISOString().split('T')[0])
         }
 
-        this.selectedBe = `${this.selectData.day}/${this.selectData.month + 1}/${this.selectData.year + 543}`
-        this.currentYear = this.selectData.year
-        this.currentMonth = this.selectData.month
-        this.renderCalendar()
-
+        // }
       }
 
       _selectedBeChanged(selectedBe) {
