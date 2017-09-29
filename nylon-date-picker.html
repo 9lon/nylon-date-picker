@@ -199,6 +199,7 @@
             observer: '_selectedChanged',
             notify: true,
             value: '2017-9-15'
+            // value: new Date().toISOString()
             // 2017-1-15
           },
           selectedBe: {
@@ -274,11 +275,19 @@
 
         this.calendar(this.currentYear, this.currentMonth)
       }
-
+      _getfirstDayOfCurrentMonth(y, m) {
+        return new Date(y, m, 1).getDay()
+      }
+      _getlastDateOfCurrentMonth(y, m) {
+        return new Date(y, m + 1, 0).getDate()
+      }
+      _lastDateOfLastMonth(y, m) {
+        return m == 0 ? new Date(y - 1, 11, 0).getDate() : new Date(y, m, 0).getDate()
+      }
       calendar(y, m) {
-        var firstDayOfCurrentMonth = new Date(y, m, 1).getDay()
-        var lastDateOfCurrentMonth = new Date(y, m + 1, 0).getDate()
-        var lastDateOfLastMonth = m == 0 ? new Date(y - 1, 11, 0).getDate() : new Date(y, m, 0).getDate()
+        var firstDayOfCurrentMonth = this._getfirstDayOfCurrentMonth(y, m, )
+        var lastDateOfCurrentMonth = this._getlastDateOfCurrentMonth(y, m)
+        var lastDateOfLastMonth = this._lastDateOfLastMonth(y, m)
         var monthandyear = this.months[m] + ' - ' + (y + 543)
 
         var dm = this.f == 'M' ? 1 : firstDayOfCurrentMonth == 0 ? -5 : 2
@@ -399,9 +408,41 @@
       _lastDayOfMonth() {
         new Date(Number(this.data.year) - 543, Number(this.data.month - 1) + 1, 0)
       }
+      _checkDate(select, type = 'dc') {
+        let thisDay = new Date().getDate()
+        let thisMonth = new Date().getMonth()
+        let thisYear = new Date().getFullYear()
+        let date = ''
+        if (select[1] > 12) {
+          date = `${select[0]}/${thisMonth + 1}/${select[2]}`
+        }
+        if (select[0] > this._getlastDateOfCurrentMonth(select[2], select[1] - 1)) {
+          date = `${thisDay}/${select[1]}/${select[2]}`
+        }
+        if (select[2] > 9998) {
+          if (type === 'dc') {
+            date = `${select[0]}/${select[1]}/${thisYear}`
+          } else {
+            date = `${select[0]}/${select[1]}/${thisYear + 543}`
+          }
+        }
+        if (date !== '') {
+          if (type === 'dc') {
+            this.selected = date
+          } else {
+            this.selectedBe = date
+          }
+        }
+      }
+      _checkDatePass(select){
+        // console.log(select[2],select[1]);
+        return select[2].length >= 4 && select[2] < 9999 &&
+          select[1].length >= 1 && select[1] < 13 &&
+          select[0].length >= 1 && select[0] < this._getlastDateOfCurrentMonth(select[2], select[1] - 1)
+      }
       _selectedChanged(selected) {
         var select = selected.split('-')
-
+        // this._checkDate(select,'dc')
         this.selectData = {
           day: parseInt(select[2]),
           month: parseInt(select[1]) - 1,
@@ -418,10 +459,8 @@
       _selectedBeChanged(selectedBe) {
         var select = selectedBe.split('/')
         // console.log(select[2].length)
-        if (select[1] > 12) {
-          this.selectedBe = `${select[0]}/12/${select[2]}`
-        }
-        if (select[2].length >= 4 && select[2] < 99999) {
+        this._checkDate(select, 'be')
+        if (this._checkDatePass(select)) {
           var selectData = {
             day: parseInt(select[0]),
             month: parseInt(select[1]) - 1,
