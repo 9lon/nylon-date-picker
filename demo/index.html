@@ -1,30 +1,45 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>nylon-date-picker demo</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <title>nylon-date-picker demo</title>
 
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../nylon-date-picker.html">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
-    <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-      </style>
-    </custom-style>
-  </head>
-  <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic nylon-date-picker demo</h3>
-      <demo-snippet>
-        <template>
-          <nylon-date-picker label="วันที่" selected="2017-09-01"></nylon-date-picker>
-        </template>
-      </demo-snippet>
-    </div>
-  </body>
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../nylon-date-picker.html">
+
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+
+    </style>
+  </custom-style>
+</head>
+
+<body>
+  <div class="vertical-section-container centered">
+    <h3>Basic nylon-date-picker demo</h3>
+
+    <demo-snippet>
+      <template>
+        <button onclick="validate()">Validate!</button>
+        <nylon-date-picker id="date" label="วันที่" selected="2017-09-01"></nylon-date-picker>
+        <script>
+          function validate() {
+            console.log(11111);
+            console.log(document);
+            console.log(document.getElementById('date').validate());
+            // document.getElementById('nylon-date-picker').validate();
+          }
+        </script>
+      </template>
+    </demo-snippet>
+  </div>
+
+</body>
+
 </html>

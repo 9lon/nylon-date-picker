@@ -13,6 +13,8 @@
 
 <link rel="import" href="./nylon-date-icon.html">
 
+<link rel="import" href="./bower_components/iron-validator-behavior/iron-validator-behavior.html">
+
 <dom-module id="nylon-date-picker">
   <template>
     <style>
@@ -164,6 +166,10 @@
       <paper-icon-button slot="suffix" icon="nylon-data-icon:calendar" on-tap="openCalendar"></paper-icon-button>
     </paper-input>
 
+    <paper-input label="{{label}}" value={{selected}} disabled="[[disabled]]">
+      <paper-icon-button slot="suffix" icon="nylon-data-icon:calendar" on-tap="openCalendar"></paper-icon-button>
+    </paper-input>
+
     <iron-dropdown id="dropdown" horizontal-align="right" vertical-align="top" open-animation-config="[[openAnimationConfig]]"
       close-animation-config="[[closeAnimationConfig]]">
       <div slot="dropdown-content" class="box">
@@ -206,7 +212,7 @@
      * @polymer
      * @demo demo/index.html
      */
-    class NylonDatePicker extends Polymer.Element {
+    class NylonDatePicker extends Polymer.mixinBehaviors([Polymer.IronValidatorBehavior], Polymer.Element) {
       static get is() { return 'nylon-date-picker'; }
       static get properties() {
         return {
@@ -234,7 +240,8 @@
           },
           daysOfWeek: {
             type: Array,
-            value: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            value: ['จัน', 'อัง', 'พุธ', 'พฤ', 'ศุกร์', 'เสาร์', 'อา']
+            // value: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
           },
           months: {
             type: Array,
@@ -436,7 +443,7 @@
       _lastDayOfMonth() {
         new Date(Number(this.data.year) - 543, Number(this.data.month - 1) + 1, 0)
       }
-      _checkDate(select, type = 'dc') {
+      _checkDateBc(select) {
         let thisDay = new Date().getDate()
         let thisMonth = new Date().getMonth()
         let thisYear = new Date().getFullYear()
@@ -448,53 +455,70 @@
           date = `${thisDay}/${select[1]}/${select[2]}`
         }
         if (select[2] > 9998) {
-          if (type === 'dc') {
-            date = `${select[0]}/${select[1]}/${thisYear}`
-          } else {
-            date = `${select[0]}/${select[1]}/${thisYear + 543}`
-          }
+          date = `${select[0]}/${select[1]}/${thisYear + 543}`
         }
         if (date !== '') {
-          if (type === 'dc') {
-            this.selected = date
-          } else {
-            this.selectedBe = date
-          }
+          this.selectedBe = date
         }
       }
-      _checkDatePass(select) {
+      _checkDateDc(select) {
+        let thisDay = new Date().getDate()
+        let thisMonth = new Date().getMonth()
+        let thisYear = new Date().getFullYear()
+        let date = ''
+        // month
+        if (Number(select[1]) > 12) {
+          date = `${select[0]}-${thisMonth + 1}-${select[2]}`
+        }
+        // day
+        if (Number(select[2]) > this._getlastDateOfCurrentMonth(select[0], select[1] - 1)) {
+          date = `${select[0]}-${select[1]}-${thisDay}`
+        }
+        //year
+        if (Number(select[0]) > 9998) {
+          date = `${thisYear}-${select[1]}-${select[2]}`
+        }
+        if (date !== '') {
+          this.selected = date
+        }
+      }
+      _checkDatePassBc(select) {
         // console.log(select[2],select[1]);
         return select[2].length >= 4 && select[2] < 9999 &&
           select[1].length >= 1 && select[1] < 13 &&
           select[0].length >= 1 && select[0] < this._getlastDateOfCurrentMonth(select[2], select[1] - 1)
       }
+      _checkDatePassDc(select) {
+        // console.log(select[2],select[1]);
+        return select[0].length >= 4 && Number(select[0]) < 9999 &&
+          select[1].length >= 1 && Number(select[1]) < 13 &&
+          select[2].length >= 1 && Number(select[2]) < this._getlastDateOfCurrentMonth(select[2], select[1] - 1)
+      }
       _selectedChanged(selected) {
         //เช็คว่าค่าว่างมาไหม
         if (selected !== '' && selected !== undefined) {
           var select = selected.split('-')
-          // this._checkDate(select,'dc')
-          // if (this._checkDatePass(select)) {
-          this.selectData = {
-            day: parseInt(select[2]),
-            month: parseInt(select[1]) - 1,
-            year: parseInt(select[0])
+          this._checkDateDc(select)
+          // console.log(this._checkDatePassDc(select));
+          if (this._checkDatePassDc(select)) {
+            this.selectData = {
+              day: parseInt(select[2]),
+              month: parseInt(select[1]) - 1,
+              year: parseInt(select[0])
+            }
+            this.selectedBe = `${this.selectData.day}/${this.selectData.month + 1}/${this.selectData.year + 543}`
+            this.currentYear = this.selectData.year
+            this.currentMonth = this.selectData.month
+            this.renderCalendar()
+          } else {
+            // this.set('selected', new Date().toISOString().split('T')[0])
           }
-          this.selectedBe = `${this.selectData.day}/${this.selectData.month + 1}/${this.selectData.year + 543}`
-          this.currentYear = this.selectData.year
-          this.currentMonth = this.selectData.month
-          this.renderCalendar()
-        } else {
-          this.set('selected', new Date().toISOString().split('T')[0])
         }
-
-        // }
       }
-
       _selectedBeChanged(selectedBe) {
         var select = selectedBe.split('/')
-        // console.log(select[2].length)
-        this._checkDate(select, 'be')
-        if (this._checkDatePass(select)) {
+        this._checkDateBc(select)
+        if (this._checkDatePassBc(select)) {
           var selectData = {
             day: parseInt(select[0]),
             month: parseInt(select[1]) - 1,
@@ -502,11 +526,17 @@
           }
           this.selected = (`${selectData.year}-${selectData.month + 1}-${selectData.day}`)
         }
-
       }
 
       openCalendar() {
         this.$.dropdown.open();
+      }
+
+      validate(value) {
+        // 29/9/2560
+        let dc = (/^\d{4}[-]\d{1,2}[-]\d{1,2}/).test(this.selected)
+        let be = (/^\d{1,2}[/]\d{1,2}[/]\d{4}/).test(this.selectedBe)
+        return dc === be
       }
     }
 
