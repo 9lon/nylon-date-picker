@@ -27,13 +27,15 @@
     <demo-snippet>
       <template>
         <button onclick="validate()">Validate!</button>
+        <button onclick="reset()">reset!</button>
         <nylon-date-picker id="date" label="วันที่" selected="2017-09-01"></nylon-date-picker>
         <script>
           function validate() {
-            console.log(11111);
-            console.log(document);
-            console.log(document.getElementById('date').validate());
+            document.getElementById('date').validate()
             // document.getElementById('nylon-date-picker').validate();
+          }
+          function reset(){
+            document.getElementById('date').reset()
           }
         </script>
       </template>

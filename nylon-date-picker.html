@@ -4,7 +4,7 @@
 
 <link rel="import" href="./bower_components/paper-icon-button/paper-icon-button.html">
 
-<link rel="import" href="./bower_components/paper-input/paper-input.html">
+<!-- <link rel="import" href="./bower_components/paper-input/paper-input.html"> -->
 
 <link rel="import" href="./bower_components/iron-dropdown/iron-dropdown.html">
 
@@ -15,160 +15,217 @@
 
 <link rel="import" href="./bower_components/iron-validator-behavior/iron-validator-behavior.html">
 
+<link rel="import" href="./bower_components/shadycss/apply-shim.html">
+
+
+<link rel="import" href="./bower_components/paper-input/paper-input-container.html">
+
+<link rel="import" href="./bower_components/iron-input/iron-input.html">
+
+<link rel="import" href="./bower_components/paper-input/demo/ssn-input.html">
+
+<link rel="import" href="./bower_components/paper-input/paper-input-error.html">
+
+<!-- <link rel="import" href="./bower_components/polymer/lib/elements/custom-style.html"> -->
+
 <dom-module id="nylon-date-picker">
   <template>
-    <style>
-       :host {
-        display: block;
-      }
+    <custom-style>
+      <style is="custom-style">
+        p {
+          color: var(--my-toolbar-title-color);
+        }
 
-      div {
-        font-size: 10px
-      }
+         :host {
+          display: block;
+          --my-toolbar-title-color: red;
+        }
 
-      .calendar_modern {
-        /* padding: 50px; */
-      }
+        input {
+          font: inherit;
+          outline: none;
+          box-shadow: none;
+          border: none;
+          width: auto;
+          text-align: center;
+          font-size: medium;
+        }
 
-      .calendar_modern .calendar {
-        margin: auto;
-        width: 245px;
-        /* height: auto; */
-        height: 260px;
-      }
+        div {
+          font-size: 10px
+        }
 
-      .calendar_modern .calendar .nav {
-        height: 0;
-        position: relative;
-      }
+        paper-input-container {
+          /* --paper-input-container-color: var(--my-toolbar-title-color); */
+          --paper-input-container-underline: {
+            border-bottom: var(--paper-input-border-success);
+          }
+        }
 
-      .calendar_modern .calendar .nav i,
-      .calendar_modern .calendar .nav b {
-        display: block;
-        font-style: normal;
-        position: absolute;
-        cursor: pointer;
-        width: 30px;
-        height: 30px;
-        z-index: 100;
-        top: 0;
-      }
+        .calendar_modern {
+          /* padding: 50px; */
+        }
 
-      .calendar_modern .calendar .nav i {
-        left: 0;
-        border-right: 1px solid #423a37;
-        background: url(http://cs4399.userapi.com/u49225742/docs/58f03726ea27/lft.png) no-repeat center center transparent;
-      }
+        .calendar_modern .calendar {
+          margin: auto;
+          width: 245px;
+          /* height: auto; */
+          height: 260px;
+        }
 
-      .calendar_modern .calendar .nav b {
-        right: 0;
-        border-left: 1px solid #423a37;
-        background: url(http://cs4399.userapi.com/u49225742/docs/5fd2e9dd3a9f/rgt.png) no-repeat center center transparent;
-      }
+        .calendar_modern .calendar .nav {
+          height: 0;
+          position: relative;
+        }
 
-      .calendar_modern .calendar .month .header {
-        height: 30px;
-        position: relative;
-        font-family: Arial, Helvetica, sans-serif;
-        color: white;
-        line-height: 30px;
-        font-weight: bold;
-        font-size: 1.4em;
-        text-align: center;
-        background: #372f2c;
-        border-radius: 3px;
-      }
+        .calendar_modern .calendar .nav i,
+        .calendar_modern .calendar .nav b {
+          display: block;
+          font-style: normal;
+          position: absolute;
+          cursor: pointer;
+          width: 30px;
+          height: 30px;
+          z-index: 100;
+          top: 0;
+        }
 
-      .calendar_modern .calendar .month .body {
-        background: #e4e4e4;
-      }
+        .calendar_modern .calendar .nav i {
+          left: 0;
+          border-right: 1px solid #423a37;
+          background: url(http://cs4399.userapi.com/u49225742/docs/58f03726ea27/lft.png) no-repeat center center transparent;
+        }
 
-      .calendar_modern .calendar .month .body .day_names {
-        height: 25px;
-      }
+        .calendar_modern .calendar .nav b {
+          right: 0;
+          border-left: 1px solid #423a37;
+          background: url(http://cs4399.userapi.com/u49225742/docs/5fd2e9dd3a9f/rgt.png) no-repeat center center transparent;
+        }
 
-      .calendar_modern .calendar .month .body .day_names i {
-        font-family: Arial, Helvetica, sans-serif;
-        display: block;
-        height: 25px;
-        line-height: 25px;
-        text-align: center;
-        font-style: normal;
-        float: left;
-        width: 34px;
-      }
+        .calendar_modern .calendar .month .header {
+          height: 30px;
+          position: relative;
+          font-family: Arial, Helvetica, sans-serif;
+          color: white;
+          line-height: 30px;
+          font-weight: bold;
+          font-size: 1.4em;
+          text-align: center;
+          background: #372f2c;
+          border-radius: 3px;
+        }
 
-      .calendar_modern .calendar .month .body .days s {
-        font-family: Arial, Helvetica, sans-serif;
-        display: block;
-        float: left;
-        width: 33px;
-        height: 33px;
-        background-color: #ffffff;
-        font-size: 1.5em;
-        font-weight: bold;
-        line-height: 34px;
-        text-align: center;
-        font-style: normal;
-        text-decoration: none;
-        /* table like borders */
-        border-right: 1px solid #aaaaaa;
-        border-bottom: 1px solid #aaaaaa;
-        /* table like borders */
-        cursor: pointer;
-      }
+        .calendar_modern .calendar .month .body {
+          background: #e4e4e4;
+        }
+
+        .calendar_modern .calendar .month .body .day_names {
+          height: 25px;
+        }
+
+        .calendar_modern .calendar .month .body .day_names i {
+          font-family: Arial, Helvetica, sans-serif;
+          display: block;
+          height: 25px;
+          line-height: 25px;
+          text-align: center;
+          font-style: normal;
+          float: left;
+          width: 34px;
+        }
+
+        .calendar_modern .calendar .month .body .days s {
+          font-family: Arial, Helvetica, sans-serif;
+          display: block;
+          float: left;
+          width: 33px;
+          height: 33px;
+          background-color: #ffffff;
+          font-size: 1.5em;
+          font-weight: bold;
+          line-height: 34px;
+          text-align: center;
+          font-style: normal;
+          text-decoration: none;
+          /* table like borders */
+          border-right: 1px solid #aaaaaa;
+          border-bottom: 1px solid #aaaaaa;
+          /* table like borders */
+          cursor: pointer;
+        }
 
 
-      .calendar_modern .calendar .month .body .days s:nth-child(n+1):nth-child(-n+7) {
-        border-top: 1px solid #aaaaaa;
-      }
+        .calendar_modern .calendar .month .body .days s:nth-child(n+1):nth-child(-n+7) {
+          border-top: 1px solid #aaaaaa;
+        }
 
-      [i-left] {
-        border-left: 1px solid #aaaaaa;
-      }
+        [i-left] {
+          border-left: 1px solid #aaaaaa;
+        }
 
-      [i-select] {
-        color: #3399ff;
-        /* color:#fff; */
-      }
+        [i-select] {
+          color: #3399ff;
+          /* color:#fff; */
+        }
 
-      [i-frist],
-      [i-last] {
-        color: #8d8d8d;
-      }
+        [i-frist],
+        [i-last] {
+          color: #8d8d8d;
+        }
 
-      [i-current] {
-        color: #000;
-      }
+        [i-current] {
+          color: #000;
+        }
 
-      span,
-      .n {
-        cursor: pointer
-      }
+        span,
+        .n {
+          cursor: pointer
+        }
 
-      paper-icon-button {
-        color: #8d8d8d;
-        -o-transition: color .2s ease-out;
-        -ms-transition: color .2s ease-out;
-        -moz-transition: color .2s ease-out;
-        -webkit-transition: color .2s ease-out;
-        /* ...and now override with proper CSS property */
-        transition: color .2s ease-out;
-      }
+        paper-icon-button {
+          color: #8d8d8d;
+          -o-transition: color .2s ease-out;
+          -ms-transition: color .2s ease-out;
+          -moz-transition: color .2s ease-out;
+          -webkit-transition: color .2s ease-out;
+          /* ...and now override with proper CSS property */
+          transition: color .2s ease-out;
+        }
 
-      paper-icon-button:hover {
-        color: black;
-      }
-    </style>[[selected]]
+        paper-icon-button:hover {
+          color: black;
+        }
+      </style>
+    </custom-style>
+    {{_dayBe}}//{{_monthBe}}//{{_yearBe}}
+    <paper-input-container always-float-label attr-for-value="value" disabled="[[disabled]]">
+      <label slot="label">{{label}}</label>
+      <span slot="input">
+          <iron-input bind-value="{{_dayBe}}" allowed-pattern="[0-9]" aria-label="First 2 digits of date ">
+              <input maxlength="2" size="2" min="1" max="31">
+            </iron-input>
+            /
+            <iron-input bind-value ="{{_monthBe}}" allowed-pattern="[0-9]" aria-label="Middle 2 digits of month ">
+              <input maxlength="2" size="2" min="1" max="12">
+            </iron-input>
+            /
+            <iron-input bind-value="{{_yearBe}}"allowed-pattern="[0-9]"  aria-label="Last 4 digits of year">
+              <input maxlength="4" size="4"  min="1" max="9999">
+            </iron-input>
+      </span>
+      <paper-icon-button slot="suffix" icon="nylon-data-icon:calendar" on-tap="openCalendar"></paper-icon-button>
+      <paper-input-error slot="add-on">Date invalid!</paper-input-error>
+    </paper-input-container>
+    [[selected]]
     <br> [[selectedBe]]
-
-    <paper-input label="{{label}}" value={{selectedBe}} disabled="[[disabled]]">
+    <p>111212</p>
+    <!-- <paper-input label="{{label}}" style="" value={{selectedBe}} disabled="[[disabled]]">
       <paper-icon-button slot="suffix" icon="nylon-data-icon:calendar" on-tap="openCalendar"></paper-icon-button>
     </paper-input>
 
-    <paper-input label="{{label}}" value={{selected}} disabled="[[disabled]]">
+    <paper-input label="{{label}}" style="" value={{selected}} disabled="[[disabled]]">
       <paper-icon-button slot="suffix" icon="nylon-data-icon:calendar" on-tap="openCalendar"></paper-icon-button>
-    </paper-input>
+    </paper-input> -->
 
     <iron-dropdown id="dropdown" horizontal-align="right" vertical-align="top" open-animation-config="[[openAnimationConfig]]"
       close-animation-config="[[closeAnimationConfig]]">
@@ -230,6 +287,9 @@
             notify: true,
             //value:'15/9/2560'
           },
+          _dayBe: String,
+          _monthBe: String,
+          _yearBe: String,
           label: {
             type: String,
             value: 'Label'
@@ -278,14 +338,24 @@
           }
         };
       }
-
+      static get observers() {
+        return [
+          'checkDateBe(_dayBe,_monthBe,_yearBe)'
+        ]
+      }
       constructor() {
         super()
         this.init()
         this.renderCalendar()
       }
 
+      checkDateBe(_dayBe, _monthBe, _yearBe) {
+        if (_dayBe !== undefined && _monthBe !== undefined && _yearBe !== undefined) {
+          this.set('selectedBe', _dayBe + '/' + _monthBe + '/' + _yearBe)
+          console.log(_dayBe, _monthBe, _yearBe);
+        }
 
+      }
 
       init() {
         // this.daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -435,6 +505,10 @@
 
       _selectDate(e) {
         this.selected = e.model.item2.date
+        let date = this.selected
+        this.set('_dayBe', date.split('-')[2])
+        this.set('_monthBe', date.split('-')[1])
+        this.set('_yearBe', Number(date.split('-')[0]) + 543)
         this.$.dropdown.close();
       }
       _firstDayOfMonth() {
@@ -483,16 +557,24 @@
         }
       }
       _checkDatePassBc(select) {
-        // console.log(select[2],select[1]);
-        return select[2].length >= 4 && select[2] < 9999 &&
-          select[1].length >= 1 && select[1] < 13 &&
-          select[0].length >= 1 && select[0] < this._getlastDateOfCurrentMonth(select[2], select[1] - 1)
+        if (select.length > 2) {
+          return select[2].length >= 4 && select[2] < 9999 &&
+            select[1].length >= 1 && select[1] < 13 &&
+            select[0].length >= 1 && select[0] < this._getlastDateOfCurrentMonth(select[2], select[1] - 1)
+        } else {
+          return false
+        }
+
       }
       _checkDatePassDc(select) {
         // console.log(select[2],select[1]);
-        return select[0].length >= 4 && Number(select[0]) < 9999 &&
-          select[1].length >= 1 && Number(select[1]) < 13 &&
-          select[2].length >= 1 && Number(select[2]) < this._getlastDateOfCurrentMonth(select[2], select[1] - 1)
+        if (select.length > 2) {
+          return select[0].length >= 4 && Number(select[0]) < 9999 &&
+            select[1].length >= 1 && Number(select[1]) < 13 &&
+            select[2].length >= 1 && Number(select[2]) < this._getlastDateOfCurrentMonth(select[2], select[1] - 1)
+        } else {
+          return false
+        }
       }
       _selectedChanged(selected) {
         //เช็คว่าค่าว่างมาไหม
@@ -518,6 +600,10 @@
       _selectedBeChanged(selectedBe) {
         var select = selectedBe.split('/')
         this._checkDateBc(select)
+        this.set('_dayBe',select[0])
+        this.set('_monthBe',select[1])
+        this.set('_yearBe',select[2])
+        // console.log(select);
         if (this._checkDatePassBc(select)) {
           var selectData = {
             day: parseInt(select[0]),
@@ -536,7 +622,16 @@
         // 29/9/2560
         let dc = (/^\d{4}[-]\d{1,2}[-]\d{1,2}/).test(this.selected)
         let be = (/^\d{1,2}[/]\d{1,2}[/]\d{4}/).test(this.selectedBe)
+        let style = '1px solid green'
+        if (dc !== be)
+          style = '1px solid red'
+        this.updateStyles({
+          '--paper-input-border-success': style
+        })
         return dc === be
+      }
+      reset() {
+        this.updateStyles({ '--paper-input-border-success': '1px solid #737373' })
       }
     }
 
