@@ -4,7 +4,7 @@
 
 <link rel="import" href="./bower_components/paper-icon-button/paper-icon-button.html">
 
-<!-- <link rel="import" href="./bower_components/paper-input/paper-input.html"> -->
+<link rel="import" href="./bower_components/paper-input/paper-input.html">
 
 <link rel="import" href="./bower_components/iron-dropdown/iron-dropdown.html">
 
@@ -195,22 +195,26 @@
         paper-icon-button:hover {
           color: black;
         }
+
+        paper-icon-button[disabled] {
+          display: none;
+        }
       </style>
     </custom-style>
     {{_dayBe}}//{{_monthBe}}//{{_yearBe}}
-    <paper-input-container always-float-label attr-for-value="value" disabled="[[disabled]]">
+    <paper-input-container always-float-label attr-for-value="value" disabled$="[[disabled]]">
       <label slot="label">{{label}}</label>
       <span slot="input">
-          <iron-input bind-value="{{_dayBe}}" allowed-pattern="[0-9]" aria-label="First 2 digits of date " on-focusout="checkDay">
-              <input maxlength="2" size="2" min="1" max="31">
+          <iron-input bind-value="{{_dayBe}}"  allowed-pattern="[0-9]" aria-label="First 2 digits of date " on-focusout="checkDay">
+              <input maxlength="2" size="2" min="1"  max="31">
             </iron-input>
             /
-            <iron-input bind-value ="{{_monthBe}}" allowed-pattern="[0-9]" aria-label="Middle 2 digits of month " on-focusout="checkMonth">
-              <input maxlength="2" size="2" min="1" max="12">
+            <iron-input bind-value ="{{_monthBe}}"  allowed-pattern="[0-9]" aria-label="Middle 2 digits of month " on-focusout="checkMonth">
+              <input maxlength="2" size="2" min="1"  max="12">
             </iron-input>
             /
-            <iron-input bind-value="{{_yearBe}}"allowed-pattern="[0-9]"  aria-label="Last 4 digits of year" on-focusout="checkYear">
-              <input maxlength="4" size="4"  min="1" max="9999">
+            <iron-input bind-value="{{_yearBe}}" allowed-pattern="[0-9]"  aria-label="Last 4 digits of year" on-focusout="checkYear">
+              <input maxlength="4" size="4"  min="1"  max="9999">
             </iron-input>
       </span>
       <paper-icon-button slot="suffix" icon="nylon-data-icon:calendar" on-tap="openCalendar"></paper-icon-button>
@@ -221,14 +225,8 @@
     [[selected]] /// [[showBc]]
     <br> [[selectedBe]]
     <p>111212</p>
-    <!-- <paper-input label="{{label}}" style="" value={{selectedBe}} disabled="[[disabled]]">
-      <paper-icon-button slot="suffix" icon="nylon-data-icon:calendar" on-tap="openCalendar"></paper-icon-button>
+    <paper-input label="search!" type="search" disabled="[[disabled]]" placeholder="search for cats" autosave="test" results="5">
     </paper-input>
-
-    <paper-input label="{{label}}" style="" value={{selected}} disabled="[[disabled]]">
-      <paper-icon-button slot="suffix" icon="nylon-data-icon:calendar" on-tap="openCalendar"></paper-icon-button>
-    </paper-input> -->
-
     <iron-dropdown id="dropdown" horizontal-align="right" vertical-align="top" open-animation-config="[[openAnimationConfig]]"
       close-animation-config="[[closeAnimationConfig]]">
       <div slot="dropdown-content" class="box">
@@ -382,7 +380,7 @@
       checkDateBe(_dayBe, _monthBe, _yearBe) {
         if (_dayBe !== undefined && _dayBe <= 31 && _monthBe !== undefined && Number(_monthBe) <= 12 && _yearBe !== undefined) {
           if (this.showBc) {
-          this.set('selectedBe', _dayBe + '/' + _monthBe + '/' + _yearBe)
+            this.set('selectedBe', _dayBe + '/' + _monthBe + '/' + _yearBe)
           } else {
             this.set('selected', _yearBe + '-' + _monthBe + '-' + _dayBe)
             // this.selected = (`${_yearBe}-${_monthBe}-${_dayBey}`)
@@ -642,13 +640,13 @@
         this._checkDateBc(select)
         this.set('_dayBe', select[0])
         this.set('_monthBe', select[1])
-        
+
         if (this.showBc) {
           this.set('_yearBe', select[2])
-        }else {
-          this.set('_yearBe', Number(select[2])-543)
+        } else {
+          this.set('_yearBe', Number(select[2]) - 543)
         }
-        
+
         // console.log(select);
         if (this._checkDatePassBc(select)) {
           var selectData = {
