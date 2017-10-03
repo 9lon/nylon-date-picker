@@ -201,22 +201,24 @@
     <paper-input-container always-float-label attr-for-value="value" disabled="[[disabled]]">
       <label slot="label">{{label}}</label>
       <span slot="input">
-          <iron-input bind-value="{{_dayBe}}" allowed-pattern="[0-9]" aria-label="First 2 digits of date ">
+          <iron-input bind-value="{{_dayBe}}" allowed-pattern="[0-9]" aria-label="First 2 digits of date " on-focusout="checkDay">
               <input maxlength="2" size="2" min="1" max="31">
             </iron-input>
             /
-            <iron-input bind-value ="{{_monthBe}}" allowed-pattern="[0-9]" aria-label="Middle 2 digits of month ">
+            <iron-input bind-value ="{{_monthBe}}" allowed-pattern="[0-9]" aria-label="Middle 2 digits of month " on-focusout="checkMonth">
               <input maxlength="2" size="2" min="1" max="12">
             </iron-input>
             /
-            <iron-input bind-value="{{_yearBe}}"allowed-pattern="[0-9]"  aria-label="Last 4 digits of year">
+            <iron-input bind-value="{{_yearBe}}"allowed-pattern="[0-9]"  aria-label="Last 4 digits of year" on-focusout="checkYear">
               <input maxlength="4" size="4"  min="1" max="9999">
             </iron-input>
       </span>
       <paper-icon-button slot="suffix" icon="nylon-data-icon:calendar" on-tap="openCalendar"></paper-icon-button>
       <paper-input-error slot="add-on">Date invalid!</paper-input-error>
     </paper-input-container>
-    [[selected]]
+
+
+    [[selected]] /// [[showBc]]
     <br> [[selectedBe]]
     <p>111212</p>
     <!-- <paper-input label="{{label}}" style="" value={{selectedBe}} disabled="[[disabled]]">
@@ -273,6 +275,10 @@
       static get is() { return 'nylon-date-picker'; }
       static get properties() {
         return {
+          showBc: {
+            type: Boolean,
+            value: false
+          },
           selected: {
             type: String,
             observer: '_selectedChanged',
@@ -340,7 +346,9 @@
       }
       static get observers() {
         return [
-          'checkDateBe(_dayBe,_monthBe,_yearBe)'
+          'checkDateBe(_dayBe,_monthBe,_yearBe)',
+          'checkDayLimit(_dayBe)',
+          'checkMonthLimit(_monthBe)',
         ]
       }
       constructor() {
@@ -348,15 +356,42 @@
         this.init()
         this.renderCalendar()
       }
+      // check date
+      checkDay() {
+        if (this._dayBe === '' || Number(this._dayBe) === 0)
+          this.set('_dayBe', 1)
+      }
+      checkMonth() {
+        if (this._monthBe === '' || Number(this._monthBe) === 0)
+          this.set('_monthBe', new Date().getMonth() + 1)
+      }
+      checkYear() {
+        if (this._yearBe === '' || Number(this._yearBe) === 0)
+          this.set('_yearBe', new Date().getFullYear() + 543)
+      }
+      checkDayLimit(_dayBe) {
+        if (Number(_dayBe) > this._getlastDateOfCurrentMonth(Number(this._yearBe), Number(this._monthBe - 1))) {
+          this.set('_dayBe', this._getlastDateOfCurrentMonth(Number(this._yearBe), Number(this._monthBe - 1)));
+        }
+      }
+      checkMonthLimit(_monthBe) {
+        if (Number(this._monthBe) > 12)
+          this.set('_monthBe', new Date().getMonth() + 1)
+      }
 
       checkDateBe(_dayBe, _monthBe, _yearBe) {
-        if (_dayBe !== undefined && _monthBe !== undefined && _yearBe !== undefined) {
+        if (_dayBe !== undefined && _dayBe <= 31 && _monthBe !== undefined && Number(_monthBe) <= 12 && _yearBe !== undefined) {
+          if (this.showBc) {
           this.set('selectedBe', _dayBe + '/' + _monthBe + '/' + _yearBe)
-          console.log(_dayBe, _monthBe, _yearBe);
+          } else {
+            this.set('selected', _yearBe + '-' + _monthBe + '-' + _dayBe)
+            // this.selected = (`${_yearBe}-${_monthBe}-${_dayBey}`)
+          }
+          // console.log(_dayBe, _monthBe, _yearBe);
         }
 
       }
-
+      // end checkDate
       init() {
         // this.daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
         // this.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -508,7 +543,12 @@
         let date = this.selected
         this.set('_dayBe', date.split('-')[2])
         this.set('_monthBe', date.split('-')[1])
-        this.set('_yearBe', Number(date.split('-')[0]) + 543)
+        if (this.showBc) {
+          this.set('_yearBe', Number(date.split('-')[0]) + 543)
+        } else {
+          this.set('_yearBe', Number(date.split('-')[0]))
+        }
+
         this.$.dropdown.close();
       }
       _firstDayOfMonth() {
@@ -600,9 +640,15 @@
       _selectedBeChanged(selectedBe) {
         var select = selectedBe.split('/')
         this._checkDateBc(select)
-        this.set('_dayBe',select[0])
-        this.set('_monthBe',select[1])
-        this.set('_yearBe',select[2])
+        this.set('_dayBe', select[0])
+        this.set('_monthBe', select[1])
+        
+        if (this.showBc) {
+          this.set('_yearBe', select[2])
+        }else {
+          this.set('_yearBe', Number(select[2])-543)
+        }
+        
         // console.log(select);
         if (this._checkDatePassBc(select)) {
           var selectData = {
