@@ -1,45 +1,30 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../paper-menu-button/paper-menu-button.html">
-
 <link rel="import" href="./bower_components/paper-icon-button/paper-icon-button.html">
-
 <link rel="import" href="./bower_components/paper-input/paper-input.html">
-
 <link rel="import" href="./bower_components/iron-dropdown/iron-dropdown.html">
-
-
 <link rel="import" href="./bower_components/neon-animation/neon-animations.html">
-
-<link rel="import" href="./nylon-date-icon.html">
-
+<link rel="import" href="./nylon-date-icon.html"
 <link rel="import" href="./bower_components/iron-validator-behavior/iron-validator-behavior.html">
-
 <link rel="import" href="./bower_components/shadycss/apply-shim.html">
-
-
 <link rel="import" href="./bower_components/paper-input/paper-input-container.html">
-
 <link rel="import" href="./bower_components/iron-input/iron-input.html">
 
-<link rel="import" href="./bower_components/paper-input/demo/ssn-input.html">
-
-<link rel="import" href="./bower_components/paper-input/paper-input-error.html">
-
-<!-- <link rel="import" href="./bower_components/polymer/lib/elements/custom-style.html"> -->
+<link rel="import" href="./nylon-date-picker-light.html">
 
 <dom-module id="nylon-date-picker">
   <template>
     <custom-style>
       <style is="custom-style">
-        p {
+        /* p {
           color: var(--my-toolbar-title-color);
         }
 
          :host {
           display: block;
           --my-toolbar-title-color: red;
-        }
+        } */
 
         input {
           font: inherit;
@@ -62,125 +47,7 @@
           }
         }
 
-        .calendar_modern {
-          /* padding: 50px; */
-        }
-
-        .calendar_modern .calendar {
-          margin: auto;
-          width: 245px;
-          /* height: auto; */
-          height: 260px;
-        }
-
-        .calendar_modern .calendar .nav {
-          height: 0;
-          position: relative;
-        }
-
-        .calendar_modern .calendar .nav i,
-        .calendar_modern .calendar .nav b {
-          display: block;
-          font-style: normal;
-          position: absolute;
-          cursor: pointer;
-          width: 30px;
-          height: 30px;
-          z-index: 100;
-          top: 0;
-        }
-
-        .calendar_modern .calendar .nav i {
-          left: 0;
-          border-right: 1px solid #423a37;
-          background: url(http://cs4399.userapi.com/u49225742/docs/58f03726ea27/lft.png) no-repeat center center transparent;
-        }
-
-        .calendar_modern .calendar .nav b {
-          right: 0;
-          border-left: 1px solid #423a37;
-          background: url(http://cs4399.userapi.com/u49225742/docs/5fd2e9dd3a9f/rgt.png) no-repeat center center transparent;
-        }
-
-        .calendar_modern .calendar .month .header {
-          height: 30px;
-          position: relative;
-          font-family: Arial, Helvetica, sans-serif;
-          color: white;
-          line-height: 30px;
-          font-weight: bold;
-          font-size: 1.4em;
-          text-align: center;
-          background: #372f2c;
-          border-radius: 3px;
-        }
-
-        .calendar_modern .calendar .month .body {
-          background: #e4e4e4;
-        }
-
-        .calendar_modern .calendar .month .body .day_names {
-          height: 25px;
-        }
-
-        .calendar_modern .calendar .month .body .day_names i {
-          font-family: Arial, Helvetica, sans-serif;
-          display: block;
-          height: 25px;
-          line-height: 25px;
-          text-align: center;
-          font-style: normal;
-          float: left;
-          width: 34px;
-        }
-
-        .calendar_modern .calendar .month .body .days s {
-          font-family: Arial, Helvetica, sans-serif;
-          display: block;
-          float: left;
-          width: 33px;
-          height: 33px;
-          background-color: #ffffff;
-          font-size: 1.5em;
-          font-weight: bold;
-          line-height: 34px;
-          text-align: center;
-          font-style: normal;
-          text-decoration: none;
-          /* table like borders */
-          border-right: 1px solid #aaaaaa;
-          border-bottom: 1px solid #aaaaaa;
-          /* table like borders */
-          cursor: pointer;
-        }
-
-
-        .calendar_modern .calendar .month .body .days s:nth-child(n+1):nth-child(-n+7) {
-          border-top: 1px solid #aaaaaa;
-        }
-
-        [i-left] {
-          border-left: 1px solid #aaaaaa;
-        }
-
-        [i-select] {
-          color: #3399ff;
-          /* color:#fff; */
-        }
-
-        [i-frist],
-        [i-last] {
-          color: #8d8d8d;
-        }
-
-        [i-current] {
-          color: #000;
-        }
-
-        span,
-        .n {
-          cursor: pointer
-        }
+       
 
         paper-icon-button {
           color: #8d8d8d;
@@ -201,19 +68,18 @@
         }
       </style>
     </custom-style>
-    {{_dayBe}}//{{_monthBe}}//{{_yearBe}}
-    <paper-input-container always-float-label attr-for-value="value" disabled$="[[disabled]]">
+       <paper-input-container always-float-label attr-for-value="value" disabled$="[[disabled]]">
       <label slot="label">{{label}}</label>
       <span slot="input">
-          <iron-input bind-value="{{_dayBe}}"  allowed-pattern="[0-9]" aria-label="First 2 digits of date " on-focusout="checkDay">
+          <iron-input bind-value="{{dayBe}}"  allowed-pattern="[0-9]" aria-label="First 2 digits of date " on-focusout="checkDay">
               <input maxlength="2" size="2" min="1"  max="31">
             </iron-input>
             /
-            <iron-input bind-value ="{{_monthBe}}"  allowed-pattern="[0-9]" aria-label="Middle 2 digits of month " on-focusout="checkMonth">
+            <iron-input bind-value ="{{monthBe}}"  allowed-pattern="[0-9]" aria-label="Middle 2 digits of month " on-focusout="checkMonth">
               <input maxlength="2" size="2" min="1"  max="12">
             </iron-input>
             /
-            <iron-input bind-value="{{_yearBe}}" allowed-pattern="[0-9]"  aria-label="Last 4 digits of year" on-focusout="checkYear">
+            <iron-input bind-value="{{yearBe}}" allowed-pattern="[0-9]"  aria-label="Last 4 digits of year" on-focusout="checkYear">
               <input maxlength="4" size="4"  min="1"  max="9999">
             </iron-input>
       </span>
@@ -221,41 +87,16 @@
       <paper-input-error slot="add-on">Date invalid!</paper-input-error>
     </paper-input-container>
 
-
+    
     [[selected]] /// [[showBc]]
     <br> [[selectedBe]]
-    <p>111212</p>
-    <paper-input label="search!" type="search" disabled="[[disabled]]" placeholder="search for cats" autosave="test" results="5">
-    </paper-input>
+    <!-- <p>111212</p> -->
+
     <iron-dropdown id="dropdown" horizontal-align="right" vertical-align="top" open-animation-config="[[openAnimationConfig]]"
       close-animation-config="[[closeAnimationConfig]]">
       <div slot="dropdown-content" class="box">
-        <div id="calendar" class="calendar_modern">
-          <div class="calendar">
-            <div class="months">
-              <div class="month" data-date="2011.1">
-                <div class="header"><span class="n" on-click="previousYear">&#60&#60</span>&nbsp;&nbsp;<span class="n" on-click="previousMonth">&#60</span>&nbsp;&nbsp;&nbsp;&nbsp;[[monthAndYear]]&nbsp;&nbsp;&nbsp;&nbsp;
-                  <span class="n" on-click="nextMonth">&#62</span>&nbsp;&nbsp;<span on-click="nextYear" class="n">&#62&#62</span></div>
-                <div class="body">
-
-                  <div class="day_names">
-                    <template is="dom-repeat" items="[[daysOfWeek]]">
-                      <i>[[item]]</i>
-                    </template>
-                  </div>
-                  <div class="days">
-                    <template is="dom-repeat" items="[[items]]">
-                      <template is="dom-repeat" as="item2" items="[[item]]">
-                        <s on-click="_selectDate" i-left$="[[_checkLeft(index)]]" i-select$="[[_checkType(item2.type,'select')]]" i-frist$="[[_checkType(item2.type,'frist')]]"
-                          i-current$="[[_checkType(item2.type,'current')]]" i-last$="[[_checkType(item2.type,'last')]]">[[item2.day]]</s>
-                      </template>
-                    </template>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <nylon-date-picker-light day-be="{{dayBe}}" month-be="{{monthBe}}" year-be="{{yearBe}}" 
+        selected="{{selected}}" selected-be="{{selectedBe}}" show-bc="{{showBc}}"></nylon-date-picker-light>
       </div>
     </iron-dropdown>
   </template>
@@ -275,11 +116,12 @@
         return {
           showBc: {
             type: Boolean,
-            value: false
+            value: false,
+            notify: true,
           },
           selected: {
             type: String,
-            observer: '_selectedChanged',
+            // observer: '_selectedChanged',
             notify: true,
             value: '2017-9-15',
             // value: new Date().toISOString()
@@ -287,13 +129,13 @@
           },
           selectedBe: {
             type: String,
-            observer: '_selectedBeChanged',
+            // observer: '_selectedBeChanged',
             notify: true,
             //value:'15/9/2560'
           },
-          _dayBe: String,
-          _monthBe: String,
-          _yearBe: String,
+          dayBe: String,
+          monthBe: String,
+          yearBe: String,
           label: {
             type: String,
             value: 'Label'
@@ -302,15 +144,15 @@
             type: Boolean,
             value: false
           },
-          daysOfWeek: {
-            type: Array,
-            value: ['จัน', 'อัง', 'พุธ', 'พฤ', 'ศุกร์', 'เสาร์', 'อา']
-            // value: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-          },
-          months: {
-            type: Array,
-            value: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-          },
+          // daysOfWeek: {
+          //   type: Array,
+          //   value: ['จัน', 'อัง', 'พุธ', 'พฤ', 'ศุกร์', 'เสาร์', 'อา']
+          //   // value: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          // },
+          // months: {
+          //   type: Array,
+          //   value: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+          // },
           openAnimationConfig: {
             type: Array,
             value: function () {
@@ -342,321 +184,20 @@
           }
         };
       }
-      static get observers() {
-        return [
-          'checkDateBe(_dayBe,_monthBe,_yearBe)',
-          'checkDayLimit(_dayBe)',
-          'checkMonthLimit(_monthBe)',
-        ]
-      }
-      constructor() {
-        super()
-        this.init()
-        this.renderCalendar()
-      }
-      // check date
+      
       checkDay() {
-        if (this._dayBe === '' || Number(this._dayBe) === 0)
-          this.set('_dayBe', 1)
+        if (this.dayBe === '' || Number(this.dayBe) === 0)
+          this.set('dayBe', 1)
       }
       checkMonth() {
-        if (this._monthBe === '' || Number(this._monthBe) === 0)
-          this.set('_monthBe', new Date().getMonth() + 1)
+        if (this.monthBe === '' || Number(this.monthBe) === 0)
+          this.set('monthBe', new Date().getMonth() + 1)
       }
       checkYear() {
-        if (this._yearBe === '' || Number(this._yearBe) === 0)
-          this.set('_yearBe', new Date().getFullYear() + 543)
+        if (this.yearBe === '' || Number(this.yearBe) === 0)
+          this.set('yearBe', new Date().getFullYear() + 543)
       }
-      checkDayLimit(_dayBe) {
-        if (Number(_dayBe) > this._getlastDateOfCurrentMonth(Number(this._yearBe), Number(this._monthBe - 1))) {
-          this.set('_dayBe', this._getlastDateOfCurrentMonth(Number(this._yearBe), Number(this._monthBe - 1)));
-        }
-      }
-      checkMonthLimit(_monthBe) {
-        if (Number(this._monthBe) > 12)
-          this.set('_monthBe', new Date().getMonth() + 1)
-      }
-
-      checkDateBe(_dayBe, _monthBe, _yearBe) {
-        if (_dayBe !== undefined && _dayBe <= 31 && _monthBe !== undefined && Number(_monthBe) <= 12 && _yearBe !== undefined) {
-          if (this.showBc) {
-            this.set('selectedBe', _dayBe + '/' + _monthBe + '/' + _yearBe)
-          } else {
-            this.set('selected', _yearBe + '-' + _monthBe + '-' + _dayBe)
-            // this.selected = (`${_yearBe}-${_monthBe}-${_dayBey}`)
-          }
-          // console.log(_dayBe, _monthBe, _yearBe);
-        }
-
-      }
-      // end checkDate
-      init() {
-        // this.daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        // this.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-        //xxx
-        this.format = 'dd/mm/yyyy'
-
-        var d = new Date()
-        this.currentMonth = d.getMonth()
-        this.currentYear = d.getFullYear()
-
-        var f = this.format
-        if (typeof (f) == 'string') {
-          this.f = f.charAt(0).toUpperCase();
-        } else {
-          this.f = 'M';
-        }
-      }
-
-      renderCalendar() {
-
-        this.calendar(this.currentYear, this.currentMonth)
-      }
-      _getfirstDayOfCurrentMonth(y, m) {
-        return new Date(y, m, 1).getDay()
-      }
-      _getlastDateOfCurrentMonth(y, m) {
-        return new Date(y, m + 1, 0).getDate()
-      }
-      _lastDateOfLastMonth(y, m) {
-        return m == 0 ? new Date(y - 1, 11, 0).getDate() : new Date(y, m, 0).getDate()
-      }
-      calendar(y, m) {
-        var firstDayOfCurrentMonth = this._getfirstDayOfCurrentMonth(y, m, )
-        var lastDateOfCurrentMonth = this._getlastDateOfCurrentMonth(y, m)
-        var lastDateOfLastMonth = this._lastDateOfLastMonth(y, m)
-        var monthandyear = this.months[m] + ' - ' + (y + 543)
-
-        var dm = this.f == 'M' ? 1 : firstDayOfCurrentMonth == 0 ? -5 : 2
-        var p = dm
-
-        var cellvalue;
-        var dataCal = [];
-
-        for (var d, i = 0, z0 = 0; z0 < 6; z0++) {
-          var datarow = [];
-          for (var z0a = 0; z0a < 7; z0a++) {
-            d = i + dm - firstDayOfCurrentMonth;
-
-            if (d < 1) {
-              cellvalue = lastDateOfLastMonth - firstDayOfCurrentMonth + p++;
-
-              var getM;
-              var getY;
-              if (m == 0) {
-                getM = 11
-                getY = y - 1
-              } else {
-                getM = m - 1
-                getY = y
-              }
-
-              datarow.push({ type: 'frist', day: cellvalue, month: getM, year: getY, date: `${getY}-${getM + 1}-${cellvalue}` })
-            } else if (d > lastDateOfCurrentMonth) {
-
-              var getM;
-              var getY;
-              if (m == 11) {
-                getM = 0
-                getY = y + 1
-              } else {
-                getM = m + 1
-                getY = y
-              }
-              datarow.push({ type: 'last', day: p, month: getM, year: getY, date: `${getY}-${getM + 1}-${p}` })
-
-              p++
-            } else {
-              var type = 'current'
-              if (this.selectData)
-                if (this.selectData.day == d && this.selectData.month == m && this.selectData.year == y)
-                  type = 'select'
-
-              datarow.push({ type: type, day: d, month: m, year: y, date: `${y}-${m + 1}-${d}` })
-              p = 1;
-            }
-
-            if (i % 7 == 6 && d >= lastDateOfCurrentMonth) {
-
-              z0 = 10; // no more rows
-            }
-
-            i++;
-          }
-          dataCal.push(datarow);
-
-
-
-        }
-
-        this.monthAndYear = monthandyear
-        this.items = dataCal
-      }
-
-      nextMonth() {
-        if (this.currentMonth == 11) {
-
-          this.currentMonth = 0;
-          this.currentYear = this.currentYear + 1;
-
-        } else {
-
-          this.currentMonth = this.currentMonth + 1;
-
-        }
-        this.renderCalendar()
-      }
-      previousMonth() {
-        if (this.currentMonth == 0) {
-
-          this.currentMonth = 11;
-          this.currentYear = this.currentYear - 1;
-
-        } else {
-
-          this.currentMonth = this.currentMonth - 1;
-
-        }
-        this.renderCalendar()
-      }
-      previousYear() {
-        this.currentYear = this.currentYear - 1;
-        this.renderCalendar()
-      }
-      nextYear() {
-        this.currentYear = this.currentYear + 1;
-        this.renderCalendar()
-      }
-
-      _checkType(type, select) {
-        return type == select
-      }
-      _checkLeft(i) {
-        return i == 0
-      }
-
-      _selectDate(e) {
-        this.selected = e.model.item2.date
-        let date = this.selected
-        this.set('_dayBe', date.split('-')[2])
-        this.set('_monthBe', date.split('-')[1])
-        if (this.showBc) {
-          this.set('_yearBe', Number(date.split('-')[0]) + 543)
-        } else {
-          this.set('_yearBe', Number(date.split('-')[0]))
-        }
-
-        this.$.dropdown.close();
-      }
-      _firstDayOfMonth() {
-        new Date(Number(this.data.year) - 543, Number(this.data.month - 1), 1)
-      }
-      _lastDayOfMonth() {
-        new Date(Number(this.data.year) - 543, Number(this.data.month - 1) + 1, 0)
-      }
-      _checkDateBc(select) {
-        let thisDay = new Date().getDate()
-        let thisMonth = new Date().getMonth()
-        let thisYear = new Date().getFullYear()
-        let date = ''
-        if (select[1] > 12) {
-          date = `${select[0]}/${thisMonth + 1}/${select[2]}`
-        }
-        if (select[0] > this._getlastDateOfCurrentMonth(select[2], select[1] - 1)) {
-          date = `${thisDay}/${select[1]}/${select[2]}`
-        }
-        if (select[2] > 9998) {
-          date = `${select[0]}/${select[1]}/${thisYear + 543}`
-        }
-        if (date !== '') {
-          this.selectedBe = date
-        }
-      }
-      _checkDateDc(select) {
-        let thisDay = new Date().getDate()
-        let thisMonth = new Date().getMonth()
-        let thisYear = new Date().getFullYear()
-        let date = ''
-        // month
-        if (Number(select[1]) > 12) {
-          date = `${select[0]}-${thisMonth + 1}-${select[2]}`
-        }
-        // day
-        if (Number(select[2]) > this._getlastDateOfCurrentMonth(select[0], select[1] - 1)) {
-          date = `${select[0]}-${select[1]}-${thisDay}`
-        }
-        //year
-        if (Number(select[0]) > 9998) {
-          date = `${thisYear}-${select[1]}-${select[2]}`
-        }
-        if (date !== '') {
-          this.selected = date
-        }
-      }
-      _checkDatePassBc(select) {
-        if (select.length > 2) {
-          return select[2].length >= 4 && select[2] < 9999 &&
-            select[1].length >= 1 && select[1] < 13 &&
-            select[0].length >= 1 && select[0] < this._getlastDateOfCurrentMonth(select[2], select[1] - 1)
-        } else {
-          return false
-        }
-
-      }
-      _checkDatePassDc(select) {
-        // console.log(select[2],select[1]);
-        if (select.length > 2) {
-          return select[0].length >= 4 && Number(select[0]) < 9999 &&
-            select[1].length >= 1 && Number(select[1]) < 13 &&
-            select[2].length >= 1 && Number(select[2]) < this._getlastDateOfCurrentMonth(select[2], select[1] - 1)
-        } else {
-          return false
-        }
-      }
-      _selectedChanged(selected) {
-        //เช็คว่าค่าว่างมาไหม
-        if (selected !== '' && selected !== undefined) {
-          var select = selected.split('-')
-          this._checkDateDc(select)
-          // console.log(this._checkDatePassDc(select));
-          if (this._checkDatePassDc(select)) {
-            this.selectData = {
-              day: parseInt(select[2]),
-              month: parseInt(select[1]) - 1,
-              year: parseInt(select[0])
-            }
-            this.selectedBe = `${this.selectData.day}/${this.selectData.month + 1}/${this.selectData.year + 543}`
-            this.currentYear = this.selectData.year
-            this.currentMonth = this.selectData.month
-            this.renderCalendar()
-          } else {
-            // this.set('selected', new Date().toISOString().split('T')[0])
-          }
-        }
-      }
-      _selectedBeChanged(selectedBe) {
-        var select = selectedBe.split('/')
-        this._checkDateBc(select)
-        this.set('_dayBe', select[0])
-        this.set('_monthBe', select[1])
-
-        if (this.showBc) {
-          this.set('_yearBe', select[2])
-        } else {
-          this.set('_yearBe', Number(select[2]) - 543)
-        }
-
-        // console.log(select);
-        if (this._checkDatePassBc(select)) {
-          var selectData = {
-            day: parseInt(select[0]),
-            month: parseInt(select[1]) - 1,
-            year: parseInt(select[2] - 543)
-          }
-          this.selected = (`${selectData.year}-${selectData.month + 1}-${selectData.day}`)
-        }
-      }
+      
 
       openCalendar() {
         this.$.dropdown.open();

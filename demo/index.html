@@ -11,6 +11,10 @@
 
   <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
   <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+
+  
+  <link rel="import" href="../nylon-date-picker-light.html">
+  
   <link rel="import" href="../nylon-date-picker.html">
 
   <custom-style>
@@ -28,7 +32,8 @@
       <template>
         <button onclick="validate()">Validate!</button>
         <button onclick="reset()">reset!</button>
-        <nylon-date-picker id="date" label="วันที่" selected="2017-09-01" show-bc disabled></nylon-date-picker>
+        <nylon-date-picker id="date" label="วันที่" selected="2017-09-01" show-bc ></nylon-date-picker>
+        <nylon-date-picker-light></nylon-date-picker-light>
         <script>
           function validate() {
             document.getElementById('date').validate()
