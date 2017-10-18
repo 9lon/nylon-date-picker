@@ -5,8 +5,7 @@
 <link rel="import" href="./bower_components/paper-input/paper-input.html">
 <link rel="import" href="./bower_components/iron-dropdown/iron-dropdown.html">
 <link rel="import" href="./bower_components/neon-animation/neon-animations.html">
-<link rel="import" href="./nylon-date-icon.html"
-<link rel="import" href="./bower_components/iron-validator-behavior/iron-validator-behavior.html">
+<link rel="import" href="./nylon-date-icon.html" <link rel="import" href="./bower_components/iron-validator-behavior/iron-validator-behavior.html">
 <link rel="import" href="./bower_components/shadycss/apply-shim.html">
 <link rel="import" href="./bower_components/paper-input/paper-input-container.html">
 <link rel="import" href="./bower_components/iron-input/iron-input.html">
@@ -47,7 +46,7 @@
           }
         }
 
-       
+
 
         paper-icon-button {
           color: #8d8d8d;
@@ -68,18 +67,18 @@
         }
       </style>
     </custom-style>
-       <paper-input-container always-float-label attr-for-value="value" disabled$="[[disabled]]">
+    <paper-input-container always-float-label attr-for-value="value" disabled$="[[disabled]]">
       <label slot="label">{{label}}</label>
       <span slot="input">
-          <iron-input bind-value="{{dayBe}}"  allowed-pattern="[0-9]" aria-label="First 2 digits of date " on-focusout="checkDay">
+          <iron-input bind-value="{{dayBe}}"  allowed-pattern="[0-9]" aria-label="First 2 digits of date "  on-focus="_setSeleteValue">
               <input maxlength="2" size="2" min="1"  max="31">
             </iron-input>
             /
-            <iron-input bind-value ="{{monthBe}}"  allowed-pattern="[0-9]" aria-label="Middle 2 digits of month " on-focusout="checkMonth">
+            <iron-input bind-value ="{{monthBe}}"  allowed-pattern="[0-9]" aria-label="Middle 2 digits of month " on-focus="_setSeleteValue">
               <input maxlength="2" size="2" min="1"  max="12">
             </iron-input>
             /
-            <iron-input bind-value="{{yearBe}}" allowed-pattern="[0-9]"  aria-label="Last 4 digits of year" on-focusout="checkYear">
+            <iron-input bind-value="{{yearBe}}" allowed-pattern="[0-9]"  aria-label="Last 4 digits of year" on-focus="_setSeleteValue">
               <input maxlength="4" size="4"  min="1"  max="9999">
             </iron-input>
       </span>
@@ -87,16 +86,16 @@
       <paper-input-error slot="add-on">Date invalid!</paper-input-error>
     </paper-input-container>
 
-<!--     
+
     [[selected]] /// [[showBc]]
     <br> [[selectedBe]]
-    <p>111212</p> -->
+    <p>111212</p>
 
     <iron-dropdown id="dropdown" horizontal-align="right" vertical-align="top" open-animation-config="[[openAnimationConfig]]"
       close-animation-config="[[closeAnimationConfig]]">
       <div slot="dropdown-content" class="box">
-        <nylon-date-picker-light day-be="{{dayBe}}" month-be="{{monthBe}}" year-be="{{yearBe}}" 
-        selected="{{selected}}" selected-be="{{selectedBe}}" show-bc="{{showBc}}"></nylon-date-picker-light>
+        <nylon-date-picker-light day-be="{{dayBe}}" month-be="{{monthBe}}" year-be="{{yearBe}}" selected="{{selected}}" selected-be="{{selectedBe}}"
+          show-bc="{{showBc}}" is-close="{{isClose}}"></nylon-date-picker-light>
       </div>
     </iron-dropdown>
   </template>
@@ -123,9 +122,7 @@
             type: String,
             // observer: '_selectedChanged',
             notify: true,
-            value: '2017-9-15',
-            // value: new Date().toISOString()
-            // 2017-1-15
+            value: '',
           },
           selectedBe: {
             type: String,
@@ -138,11 +135,33 @@
           yearBe: String,
           label: {
             type: String,
-            value: 'Label'
+            value: ''
           },
           disabled: {
             type: Boolean,
             value: false
+          },
+          value: {
+            type: String,
+            value: '',
+            notify: true,
+          },
+          noLabelFloat: {
+            type: Boolean,
+            value: false
+          },
+          alwaysFloatLabel: {
+            type: Boolean,
+            value: false
+          },
+          hidden: {
+            type: Boolean,
+            value: false
+          },
+          isClose: {
+            type: Boolean,
+            value: false,
+            observer: 'setCloseDropDown'
           },
           // daysOfWeek: {
           //   type: Array,
@@ -184,25 +203,35 @@
           }
         };
       }
-      
-      checkDay() {
-        if (this.dayBe === '' || Number(this.dayBe) === 0)
-          this.set('dayBe', 1)
-      }
-      checkMonth() {
-        if (this.monthBe === '' || Number(this.monthBe) === 0)
-          this.set('monthBe', new Date().getMonth() + 1)
-      }
-      checkYear() {
-        if (this.yearBe === '' || Number(this.yearBe) === 0)
-          this.set('yearBe', new Date().getFullYear() + 543)
-      }
-      
 
+      _setSeleteValue (e) {
+
+        let value = e.target
+        // value.value= ''
+        // console.log(value.updateValueAndPreserveCaret());
+        // console.log(value.select());
+        value.select()
+      }
+      setZeroBefore(day) {
+        if (Number(day) > 0 && 10 > Number(day) && day[0] !== '0') {
+          // console.log(1);
+          return '0' + day
+        } else {
+          // console.log(2);
+          return day
+        }
+      }
       openCalendar() {
+        // console.log(this.$.dropdown.open());
         this.$.dropdown.open();
+        this.set('isClose', false)
       }
-
+      setCloseDropDown(isClose) {
+        // console.log(isClose);
+        if (isClose)
+          this.$.dropdown.close();
+        this.set('isClose', false)
+      }
       validate(value) {
         // 29/9/2560
         let dc = (/^\d{4}[-]\d{1,2}[-]\d{1,2}/).test(this.selected)
